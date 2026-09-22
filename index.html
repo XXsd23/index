@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobalBiz Market</title>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+      --success: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #0f172a);
+      color: white;
+      padding: 22px 6%;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    nav h1 {
+      font-size: 24px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    .hero {
+      padding: 70px 6%;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: clamp(32px, 5vw, 58px);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: auto;
+      color: #dbeafe;
+      font-size: 18px;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: auto;
+    }
+
+    .search-panel {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
+      margin-top: -35px;
+      position: relative;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: 12px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #93c5fd;
+      border-color: var(--primary);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      color: white;
+      background: var(--primary);
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .section {
+      padding: 50px 0;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .section-title h2 {
+      font-size: 28px;
+    }
+
+    .results-count {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .listings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.1);
+    }
+
+    .card-image {
+      height: 155px;
+      display: grid;
+      place-items: center;
+      font-size: 48px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    }
+
+    .card-content {
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin-bottom: 7px;
+    }
+
+    .location,
+    .category {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .description {
+      color: #475569;
+      font-size: 14px;
+      min-height: 45px;
+      margin: 10px 0;
+    }
+
+    .price {
+      color: var(--success);
+      font-size: 20px;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .card-actions button {
+      font-size: 14px;
+    }
+
+    .card-actions .secondary {
+      color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .form-section {
+      background: white;
+      padding: 28px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 50px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 10px;
+      color: var(--muted);
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      background: var(--dark);
+      color: #cbd5e1;
+      padding: 30px 6%;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 850px) {
+      .search-grid,
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-grid input {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .search-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav a {
+        margin-left: 0;
+        margin-right: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1>🌍 GlobalBiz Market</h1>
+      <div>
+        <a href="#businesses">Explore Businesses</a>
+        <a href="#sell">Sell a Business</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <h2>Buy and Sell Businesses Worldwide</h2>
+      <p>
+        Discover profitable companies, startups, franchises, and investment
+        opportunities from entrepreneurs around the world.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="search-panel">
+      <div class="search-grid">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search businesses..."
+        />
+
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+          <option value="Technology">Technology</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="E-commerce">E-commerce</option>
+          <option value="Manufacturing">Manufacturing</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="Services">Services</option>
+        </select>
+
+        <select id="countryFilter">
+          <option value="">All countries</option>
+          <option value="United States">United States</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Canada">Canada</option>
+          <option value="Germany">Germany</option>
+          <option value="Australia">Australia</option>
+          <option value="Singapore">Singapore</option>
+	  <option value="India">India</option>
+	  </select>
+        <select id="sortFilter">
+          <option value="newest">Newest</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+        </select>
+
+        <button onclick="filterBusinesses()">Search</button>
+      </div>
+    </section>
+
+    <section id="businesses" class="section">
+      <div class="section-title">
+        <h2>Featured Businesses</h2>
+        <span id="resultsCount" class="results-count"></span>
+      </div>
+
+      <div id="listings" class="listings"></div>
+    </section>
+
+    <section id="sell" class="form-section">
+      <div class="section-title">
+        <h2>List Your Business</h2>
+      </div>
+
+      <form id="businessForm" class="form-grid">
+        <div class="form-group">
+          <label for="businessName">Business name</label>
+          <input id="businessName" required placeholder="Example: Digital Growth Agency" />
+        </div>
+
+        <div class="form-group">
+          <label for="businessPrice">Asking price in USD</label>
+          <input id="businessPrice" required type="number" min="1" placeholder="250000" />
+        </div>
+
+        <div class="form-group">
+          <label for="businessCategory">Category</label>
+          <select id="businessCategory" required>
+            <option value="">Select category</option>
+            <option>Technology</option>
+            <option>Restaurant</option>
+            <option>E-commerce</option>
+            <option>Manufacturing</option>
+            <option>Real Estate</option>
+            <option>Services</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="businessCountry">Country</label>
+          <input id="businessCountry" required placeholder="Country" />
+        </div>
+
+        <div class="form-group full">
+          <label for="businessDescription">Description</label>
+          <textarea
+            id="businessDescription"
+            required
+            placeholder="Describe the business, revenue, assets, and opportunity..."
+          ></textarea>
+        </div>
+
+        <div class="form-group full">
+          <button type="submit">Publish Business Listing</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 GlobalBiz Market — A worldwide business marketplace.
+  </footer>
+
+  <script>
+    let businesses = [
+      {
+        name: "CloudSync SaaS Platform",
+        price: 850000,
+        category: "Technology",
+        country: "United States",
+        icon: "💻",
+        description: "B2B software platform with recurring monthly revenue and international customers."
+      },
+	{
+        name: "Goldex",
+        price: 5000,
+        category: "Technology",
+        country: "India",
+        icon: "💻",
+        description: "B2B software platform with recurring monthly revenue and international customers."
+      },
+      {
+        name: "Organic Foods E-commerce Store",
+        price: 180000,
+        category: "E-commerce",
+        country: "Canada",
+        icon: "🛒",
+        description: "Established online food store with strong branding, suppliers, and repeat customers."
+      },
+      {
+        name: "Downtown Italian Restaurant",
+        price: 420000,
+        category: "Restaurant",
+        country: "United Kingdom",
+        icon: "🍝",
+        description: "Popular restaurant in a high-traffic location with experienced staff and equipment."
+      },
+      {
+        name: "Industrial Parts Manufacturer",
+        price: 1250000,
+        category: "Manufacturing",
+        country: "Germany",
+        icon: "🏭",
+        description: "Profitable manufacturing company serving long-term commercial clients."
+      },
+      {
+        name: "Luxury Property Management Company",
+        price: 670000,
+        category: "Real Estate",
+        country: "Australia",
+        icon: "🏢",
+        description: "Property management business with premium residential and commercial clients."
+      },
+      {
+        name: "Digital Marketing Agency",
+        price: 240000,
+        category: "Services",
+        country: "Singapore",
+        icon: "📈",
+        description: "Remote-first agency with global clients and a skilled distributed team."
+      }
+    ];
+
+    const listingsElement = document.getElementById("listings");
+    const resultsCountElement = document.getElementById("resultsCount");
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(price);
+    }
+
+    function renderBusinesses(items) {
+      listingsElement.innerHTML = "";
+
+      resultsCountElement.textContent =
+        `${items.length} business${items.length === 1 ? "" : "es"} found`;
+
+      if (!items.length) {
+        listingsElement.innerHTML = `
+          <div class="empty">
+            <h3>No businesses found</h3>
+            <p>Try changing your search filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      items.forEach((business, index) => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="card-image">${business.icon || "🌍"}</div>
+
+          <div class="card-content">
+            <h3>${escapeHtml(business.name)}</h3>
+            <div class="location">📍 ${escapeHtml(business.country)}</div>
+            <div class="category">🏷️ ${escapeHtml(business.category)}</div>
+            <p class="description">${escapeHtml(business.description)}</p>
+            <div class="price">${formatPrice(business.price)}</div>
+
+            <div class="card-actions">
+              <button onclick="contactSeller(${index})">Contact Seller</button>
+              <button class="secondary" onclick="viewDetails(${index})">
+                Details
+              </button>
+            </div>
+          </div>
+        `;
+
+        listingsElement.appendChild(card);
+      });
+    }
+
+    function filterBusinesses() {
+      const search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+      const category = document.getElementById("categoryFilter").value;
+      const country = document.getElementById("countryFilter").value;
+      const sort = document.getElementById("sortFilter").value;
+
+      let filtered = businesses.filter((business) => {
+        const matchesSearch =
+          !search ||
+          business.name.toLowerCase().includes(search) ||
+          business.description.toLowerCase().includes(search) ||
+          business.category.toLowerCase().includes(search) ||
+          business.country.toLowerCase().includes(search);
+
+        const matchesCategory =
+          !category || business.category === category;
+
+        const matchesCountry =
+          !country || business.country === country;
+
+        return matchesSearch && matchesCategory && matchesCountry;
+      });
+
+      if (sort === "low") {
+        filtered.sort((a, b) => a.price - b.price);
+      }
+
+      if (sort === "high") {
+        filtered.sort((a, b) => b.price - a.price);
+      }
+
+      renderBusinesses(filtered);
+    }
+
+    function contactSeller(index) {
+      const business = businesses[index];
+
+      alert(
+        `Contact request started for "${business.name}".\n\n` +
+        "In a production application, this would open a secure messaging system."
+      );
+    }
+
+    function viewDetails(index) {
+      const business = businesses[index];
+
+      alert(
+        `${business.name}\n\n` +
+        `Location: ${business.country}\n` +
+        `Category: ${business.category}\n` +
+        `Price: ${formatPrice(business.price)}\n\n` +
+        business.description
+      );
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    document
+      .querySelectorAll("#searchInput, #categoryFilter, #countryFilter, #sortFilter")
+      .forEach((element) => {
+        element.addEventListener("input", filterBusinesses);
+        element.addEventListener("change", filterBusinesses);
+      });
+
+    document
+      .getElementById("businessForm")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const newBusiness = {
+          name: document.getElementById("businessName").value,
+          price: Number(document.getElementById("businessPrice").value),
+          category: document.getElementById("businessCategory").value,
+          country: document.getElementById("businessCountry").value,
+          description: document.getElementById("businessDescription").value,
+          icon: "🌐"
+        };
+
+        businesses.unshift(newBusiness);
+        event.target.reset();
+        filterBusinesses();
+
+        alert("Your business listing was added successfully.");
+        window.location.hash = "businesses";
+      });
+
+    renderBusinesses(businesses);
+  </script>
+</body>
+</html>
